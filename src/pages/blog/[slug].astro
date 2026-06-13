@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CropMarks from '../../components/blueprint/CropMarks.astro';
+import CTA from '../../components/CTA.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+
+const canonical = new URL(`/blog/${post.id}`, Astro.site).href;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  datePublished: post.data.date.toISOString(),
+  author: { '@type': 'Person', name: post.data.author },
+  image: new URL(post.data.featuredImage, Astro.site).href,
+  description: post.data.metaDescription ?? post.data.excerpt,
+  publisher: { '@type': 'Organization', name: 'MAS Architect' },
+  mainEntityOfPage: canonical,
+};
+---
+
+<BaseLayout
+  title={`${post.data.title} | MAS Architect`}
+  description={post.data.metaDescription ?? post.data.excerpt ?? post.data.title}
+  image={post.data.featuredImage}
+>
+  <article>
+    <section class="bp-grid border-b border-line-soft">
+      <div class="container-mas pb-12 pt-12 md:pt-16">
+        <nav aria-label="Breadcrumb" class="mb-6 font-mono text-[0.7rem] uppercase tracking-[0.18em] text-indigo-muted">
+          <a href="/" class="transition-colors hover:text-navy">Home</a>
+          <span class="px-2 text-line">/</span>
+          <a href="/blog" class="transition-colors hover:text-navy">Blog</a>
+        </nav>
+        <p class="eyebrow mb-5">{fmt(post.data.date)} <span class="px-1 text-line">·</span> {post.data.author}</p>
+        <h1 class="max-w-4xl font-display text-[clamp(2rem,4.5vw,3.4rem)] leading-[1.06] text-navy text-balance">{post.data.title}</h1>
+      </div>
+    </section>
+
+    <div class="container-mas pt-10">
+      <div class="relative aspect-[16/9] w-full">
+        <CropMarks />
+        <img src={post.data.featuredImage} alt={post.data.title} class="h-full w-full border border-line-soft object-cover" />
+      </div>
+    </div>
+
+    <section class="pb-6 pt-12">
+      <div class="container-mas">
+        <div class="prose-mas mx-auto max-w-2xl text-lg">
+          <Content />
+        </div>
+        <div class="mx-auto mt-12 max-w-2xl border-t border-line-soft pt-8">
+          <a href="/blog" class="btn btn-ghost" data-cursor>← All Posts</a>
+        </div>
+      </div>
+    </section>
+  </article>
+
+  <CTA />
+
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline></script>
+</BaseLayout>

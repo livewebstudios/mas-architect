@@ -1,0 +1,21 @@
+---
+/**
+ * A drafting-style dimension line: end tick → rule → arrowhead,
+ * echoing the directional arrows in the MAS logo. Optional centered label.
+ */
+interface Props {
+  label?: string;
+  class?: string;
+}
+const { label, class: className = '' } = Astro.props;
+---
+
+<div class:list={['dim-line', className]} role="presentation" aria-hidden="true">
+  <span class="dim-line__tick"></span>
+  <span class="dim-line__rule"></span>
+  {label && <span class="dim-line__label eyebrow">{label}</span>}
+  {label && <span class="dim-line__rule"></span>}
+  <svg class="dim-line__arrow" width="11" height="10" viewBox="0 0 11 10" fill="none">
+    <path d="M0 5h10M6.5 1 10.5 5l-4 4" stroke="currentColor" stroke-width="1" />
+  </svg>
+</div>

@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Gallery from '../components/Gallery.tsx';
+import CTA from '../components/CTA.astro';
+import { projects, projectCategories } from '../data/portfolio';
+---
+
+<BaseLayout
+  title="Projects | MAS Architect"
+  description="A curated portfolio of MAS Architect's work — custom residential new builds, commercial and multifamily projects, renovations, and completed homes across New Jersey."
+>
+  <PageHero
+    eyebrow="Projects"
+    title="Selected Work"
+    intro="A look at our renders, planbook designs, and completed homes — from custom residential new builds to commercial and multifamily projects across New Jersey."
+  />
+
+  <section class="section">
+    <div class="container-mas">
+      <Gallery client:visible items={projects} categories={[...projectCategories]} />
+    </div>
+  </section>
+
+  <CTA />
+</BaseLayout>

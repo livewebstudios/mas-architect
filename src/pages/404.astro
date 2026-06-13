@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import DimensionLine from '../components/blueprint/DimensionLine.astro';
+---
+<BaseLayout title="Page Not Found | MAS Architect" description="The page you're looking for doesn't exist.">
+  <section class="bp-grid">
+    <div class="container-mas section flex min-h-[70vh] flex-col items-center justify-center gap-8 text-center">
+      <p class="eyebrow"><span class="eyebrow__num">404</span> Off the blueprint</p>
+      <h1 class="font-display text-5xl text-navy md:text-6xl">This page isn't drafted yet.</h1>
+      <p class="max-w-md text-ink/70">The page you're looking for may have moved or never existed. Let's get you back on plan.</p>
+      <div class="w-full max-w-xs"><DimensionLine /></div>
+      <a href="/" class="btn btn-navy" data-cursor>Back Home</a>
+    </div>
+  </section>
+</BaseLayout>

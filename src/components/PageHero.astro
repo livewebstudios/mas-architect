@@ -1,0 +1,21 @@
+---
+/** Interior-page hero: breadcrumb + display title + optional intro on graph paper. */
+interface Props {
+  eyebrow: string;
+  title: string;
+  intro?: string;
+}
+const { eyebrow, title, intro } = Astro.props;
+---
+
+<section class="bp-grid border-b border-line-soft">
+  <div class="container-mas pb-14 pt-12 md:pb-20 md:pt-16">
+    <nav aria-label="Breadcrumb" class="mb-6 font-mono text-[0.7rem] uppercase tracking-[0.18em] text-indigo-muted">
+      <a href="/" class="transition-colors hover:text-navy">Home</a>
+      <span class="px-2 text-line">/</span>
+      <span class="text-navy">{eyebrow}</span>
+    </nav>
+    <h1 class="max-w-4xl font-display text-[clamp(2.2rem,5vw,4rem)] leading-[1.04] text-navy text-balance">{title}</h1>
+    {intro && <p class="mt-6 max-w-2xl text-lg leading-relaxed text-ink/70">{intro}</p>}
+  </div>
+</section>

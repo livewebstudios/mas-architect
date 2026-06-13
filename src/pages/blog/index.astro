@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ScrollReveal from '../../components/ScrollReveal.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+---
+
+<BaseLayout
+  title="Blog | MAS Architect"
+  description="Insights, ideas, and inspiration on architecture, design, permits, and the spaces we create — from the team at MAS Architect."
+>
+  <PageHero
+    eyebrow="Blog"
+    title="Insights & Ideas"
+    intro="Our blog shares insights, ideas, and inspiration on architecture, design, and the spaces we create."
+  />
+
+  <section class="section">
+    <div class="container-mas grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      {posts.map((post, i) => (
+        <ScrollReveal delay={(i % 3) * 80}>
+          <a href={`/blog/${post.id}`} class="group flex h-full flex-col border border-line-soft bg-white" data-cursor>
+            <div class="aspect-[16/10] overflow-hidden">
+              <img src={post.data.featuredImage} alt={post.data.title} loading="lazy" decoding="async" class="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105" />
+            </div>
+            <div class="flex flex-1 flex-col gap-3 p-6">
+              <p class="font-mono text-[0.66rem] uppercase tracking-[0.14em] text-indigo-muted">{fmt(post.data.date)}</p>
+              <h2 class="font-display text-xl text-navy">{post.data.title}</h2>
+              <p class="text-sm leading-relaxed text-ink/70">{post.data.excerpt}</p>
+              <span class="mt-auto inline-flex items-center gap-2 pt-2 font-mono text-[0.7rem] uppercase tracking-[0.14em] text-navy transition-colors group-hover:text-navy-deep">
+                Read More
+                <span class="transition-transform duration-300 group-hover:translate-x-1">→</span>
+              </span>
+            </div>
+          </a>
+        </ScrollReveal>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import DimensionLine from '../components/blueprint/DimensionLine.astro';
+---
+<BaseLayout title="Thank You | MAS Architect" description="Thanks for reaching out to MAS Architect — we'll be in touch shortly.">
+  <section class="bp-grid">
+    <div class="container-mas section flex min-h-[70vh] flex-col items-center justify-center gap-8 text-center">
+      <p class="eyebrow"><span class="eyebrow__num">✓</span> Message Received</p>
+      <h1 class="max-w-2xl font-display text-4xl text-navy md:text-6xl text-balance">Thank you — we'll be in touch soon.</h1>
+      <p class="max-w-md text-ink/70">We've received your message and will get back to you shortly to start the conversation about your project.</p>
+      <div class="w-full max-w-xs"><DimensionLine /></div>
+      <a href="/" class="btn btn-navy" data-cursor>Back Home</a>
+    </div>
+  </section>
+</BaseLayout>

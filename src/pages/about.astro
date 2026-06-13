@@ -1,0 +1,144 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import ScrollReveal from '../components/ScrollReveal.astro';
+import CropMarks from '../components/blueprint/CropMarks.astro';
+import StatsCounter from '../components/StatsCounter.tsx';
+import CTA from '../components/CTA.astro';
+import { stats, testimonials, team } from '../data/site';
+
+const strengths = [
+  { title: 'Thoughtful Design', body: 'Spaces tailored to each client’s vision and lifestyle.' },
+  { title: 'Attention to Detail', body: 'Precision and quality at every stage of the process.' },
+  { title: 'Lasting Impact', body: 'Architecture that inspires and endures over time.' },
+];
+---
+
+<BaseLayout
+  title="About | MAS Architect"
+  description="MAS Architect is led by principal architect Mark Stefanelli — an East Rutherford, NJ firm creating thoughtful, functional, and timeless residential and commercial design."
+>
+  <PageHero
+    eyebrow="About"
+    title="Architecture with Purpose"
+    intro="We are an architecture firm dedicated to creating thoughtful, functional, and timeless designs that reflect each client’s vision."
+  />
+
+  <!-- What we do best -->
+  <section class="section">
+    <div class="container-mas grid gap-12 lg:grid-cols-2 lg:items-center">
+      <ScrollReveal>
+        <div class="relative aspect-[4/5] w-full">
+          <CropMarks />
+          <img src="/images/about/about-1.jpg" alt="A MAS Architect project" class="h-full w-full border border-line-soft object-cover" loading="lazy" decoding="async" />
+        </div>
+      </ScrollReveal>
+      <ScrollReveal delay={100}>
+        <div class="flex flex-col gap-6">
+          <SectionHeading eyebrow="What We Do Best" number="↳" title="Function, beauty, and purpose." />
+          <p class="leading-relaxed text-ink/70">
+            What we do best is create architecture that blends function, beauty, and purpose. Every project
+            begins with listening — understanding your needs, your goals, and the character of the space. From
+            there, we translate ideas into designs that are both practical and inspiring.
+          </p>
+          <ul class="flex flex-col divide-y divide-line-soft border-y border-line-soft">
+            {strengths.map((s) => (
+              <li class="flex gap-4 py-4">
+                <span class="mt-1 text-navy">✦</span>
+                <div>
+                  <h3 class="font-display text-lg text-navy">{s.title}</h3>
+                  <p class="text-sm text-ink/70">{s.body}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </ScrollReveal>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="section bg-linen bp-grid border-y border-line-soft">
+    <div class="container-mas flex flex-col gap-12">
+      <ScrollReveal>
+        <SectionHeading eyebrow="By the Numbers" number="↳" title="Decades of work, built to last." />
+      </ScrollReveal>
+      <ScrollReveal>
+        <StatsCounter client:visible items={stats} />
+      </ScrollReveal>
+    </div>
+  </section>
+
+  <!-- Approach (rewritten from old filler) -->
+  <section class="section">
+    <div class="container-mas grid gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
+      <ScrollReveal>
+        <SectionHeading eyebrow="Our Approach" number="↳" title="Strategy is at the heart of what we do." />
+      </ScrollReveal>
+      <ScrollReveal delay={100}>
+        <div class="flex flex-col gap-5 text-lg leading-relaxed text-ink/75">
+          <p>
+            We bring wide-ranging experience to every project, helping our clients achieve clear, long-term
+            goals. By merging timeless design with technical precision, we deliver work that stands the test of
+            time and enriches the communities it serves.
+          </p>
+          <p>
+            Whether it’s a new custom home, a commercial development, or a renovation, we approach each project
+            with the same commitment to quality and care — architecture that not only meets immediate needs but
+            adds lasting value.
+          </p>
+        </div>
+      </ScrollReveal>
+    </div>
+  </section>
+
+  <!-- Team -->
+  <section class="section bg-linen bp-grid border-y border-line-soft">
+    <div class="container-mas flex flex-col gap-12">
+      <ScrollReveal>
+        <SectionHeading eyebrow="Our Team" number="↳" title="The people behind the work." intro="Our experts bring years of experience, creativity, and technical skill to every project." />
+      </ScrollReveal>
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {team.map((m, i) => (
+          <ScrollReveal delay={i * 90}>
+            <article class="group bg-white">
+              <div class="relative aspect-[4/5] w-full overflow-hidden">
+                <img src={m.photo} alt={m.name} class="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105" loading="lazy" decoding="async" />
+              </div>
+              <div class="border border-t-0 border-line-soft p-6">
+                <h3 class="font-display text-xl text-navy">{m.name}</h3>
+                <p class="mt-1 font-mono text-[0.7rem] uppercase tracking-[0.14em] text-indigo-muted">{m.role}</p>
+              </div>
+            </article>
+          </ScrollReveal>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="section">
+    <div class="container-mas flex flex-col gap-12">
+      <ScrollReveal>
+        <SectionHeading eyebrow="Testimonials" number="↳" title="What our clients say." />
+      </ScrollReveal>
+      <div class="grid gap-6 md:grid-cols-3">
+        {testimonials.map((t, i) => (
+          <ScrollReveal delay={i * 90}>
+            <figure class="flex h-full flex-col justify-between gap-6 border border-line-soft bg-white p-8">
+              <span class="font-display text-5xl leading-none text-navy/20">”</span>
+              <blockquote class="-mt-6 leading-relaxed text-ink/80">{t.quote}</blockquote>
+              <figcaption>
+                <p class="font-display text-lg text-navy">{t.name}</p>
+                <p class="font-mono text-[0.68rem] uppercase tracking-[0.14em] text-indigo-muted">{t.company}</p>
+              </figcaption>
+            </figure>
+          </ScrollReveal>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CTA />
+</BaseLayout>

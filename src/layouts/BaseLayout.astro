@@ -1,0 +1,160 @@
+---
+import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import CursorEffect from '../components/CursorEffect.tsx';
+import { site } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
+const {
+  title = 'MAS Architect | Rebuilding Neighborhoods, One House at a Time',
+  description = 'MAS Architect — thoughtful residential and commercial architecture, planbooks, construction documents, and modular building systems in East Rutherford, NJ.',
+  image,
+} = Astro.props;
+
+// TODO (Phase 5): replace with the real GA4 Measurement ID supplied by Jon.
+const GA4_ID = 'G-XXXXXXXXXX';
+const gaEnabled = GA4_ID !== 'G-XXXXXXXXXX';
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL(image ?? '/images/home/hero.jpg', Astro.site).href;
+
+const orgLd = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  '@id': 'https://mas-architect.net/#business',
+  name: site.name,
+  description:
+    'Architecture firm in East Rutherford, NJ — residential and commercial design, planbooks, construction documents, and modular building systems.',
+  url: 'https://mas-architect.net',
+  telephone: site.phone,
+  email: site.email,
+  image: new URL('/images/home/hero.jpg', Astro.site).href,
+  logo: new URL('/images/logo-trans.png', Astro.site).href,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '375 Murray Hill Pkwy',
+    addressLocality: 'East Rutherford',
+    addressRegion: 'NJ',
+    postalCode: '07073',
+    addressCountry: 'US',
+  },
+  sameAs: [site.social.facebook, site.social.instagram],
+};
+---
+
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <ClientRouter />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="MAS Architect" />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="theme-color" content="#262261" />
+    <script type="application/ld+json" set:html={JSON.stringify(orgLd)} is:inline></script>
+
+    <!-- Enable JS-gated enhancements before first paint (prevents reveal FOUC) -->
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+
+    <!-- Fonts: Fraunces (display) + Inter (body) + IBM Plex Mono (labels) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300..700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    {gaEnabled && (
+      <>
+        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`}></script>
+        <script is:inline define:vars={{ GA4_ID }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag() { dataLayer.push(arguments); }
+          gtag('js', new Date());
+          gtag('config', GA4_ID);
+        </script>
+      </>
+    )}
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Skip to content</a>
+    <CursorEffect client:idle transition:persist />
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      // Single observer drives every .reveal element (fade + rise on scroll).
+      const reveal = () => {
+        const els = document.querySelectorAll<HTMLElement>('.reveal:not(.is-visible)');
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduce || !('IntersectionObserver' in window)) {
+          els.forEach((el) => el.classList.add('is-visible'));
+          return;
+        }
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                io.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.12, rootMargin: '0px 0px -8% 0px' }
+        );
+        els.forEach((el) => io.observe(el));
+      };
+      reveal();
+      document.addEventListener('astro:page-load', reveal);
+    </script>
+
+    <script>
+      // Subtle, bounded parallax for [data-parallax] elements (skips reduced-motion).
+      (() => {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        let ticking = false;
+        const apply = () => {
+          document.querySelectorAll<HTMLElement>('[data-parallax]').forEach((el) => {
+            const speed = parseFloat(el.dataset.parallax || '0.08');
+            const r = el.getBoundingClientRect();
+            const center = r.top + r.height / 2 - window.innerHeight / 2;
+            const offset = Math.max(-26, Math.min(26, -center * speed));
+            el.style.transform = `translate3d(0, ${offset}px, 0)`;
+          });
+          ticking = false;
+        };
+        const onScroll = () => {
+          if (!ticking) { ticking = true; requestAnimationFrame(apply); }
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll, { passive: true });
+        document.addEventListener('astro:page-load', apply);
+        apply();
+      })();
+    </script>
+  </body>
+</html>

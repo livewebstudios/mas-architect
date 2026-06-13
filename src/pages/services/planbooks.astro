@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import ScrollReveal from '../../components/ScrollReveal.astro';
+import Gallery from '../../components/Gallery.tsx';
+import CTA from '../../components/CTA.astro';
+import { planbooks, planbookSteps } from '../../data/portfolio';
+---
+
+<BaseLayout
+  title="Planbooks | MAS Architect"
+  description="Illustrated, pre-designed 3, 4, and 5-bedroom home plans created from previously built and custom-designed houses — browse for inspiration or select a ready-made plan."
+>
+  <PageHero
+    eyebrow="Planbooks"
+    title="Compact. Functional. Elegant."
+    intro="A planbook is a collection of illustrated, pre-designed home plans created from previously built or custom-designed houses. Browse completed designs for inspiration, or select a ready-made plan that fits your needs — saving time and design costs."
+  />
+
+  {planbooks.map((cat) => (
+    <section class="section border-b border-line-soft">
+      <div class="container-mas flex flex-col gap-10">
+        <ScrollReveal>
+          <SectionHeading eyebrow={`${cat.images.length} Plan${cat.images.length > 1 ? 's' : ''}`} title={`${cat.category} Plans`} intro={cat.tagline} />
+        </ScrollReveal>
+        <Gallery client:visible items={cat.images} />
+      </div>
+    </section>
+  ))}
+
+  <section class="section bg-linen bp-grid border-b border-line-soft">
+    <div class="container-mas flex flex-col gap-12">
+      <ScrollReveal>
+        <SectionHeading eyebrow="How It Works" number="↳" title="From site to finished home." />
+      </ScrollReveal>
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {planbookSteps.map((step, i) => (
+          <ScrollReveal delay={(i % 3) * 90}>
+            <div class="h-full border border-line-soft bg-white p-7">
+              <p class="eyebrow mb-4"><span class="eyebrow__num">{String(i + 1).padStart(2, '0')}</span></p>
+              <h3 class="mb-2 font-display text-xl text-navy">{step.title}</h3>
+              <p class="text-sm leading-relaxed text-ink/70">{step.body}</p>
+            </div>
+          </ScrollReveal>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container-mas">
+      <div class="flex flex-col gap-5 border border-line-soft bg-white p-8 md:flex-row md:items-center md:justify-between md:p-12">
+        <div>
+          <p class="eyebrow mb-3">Built Smarter</p>
+          <h2 class="max-w-xl font-display text-2xl text-navy md:text-3xl">Many of our plans are delivered through Modular Building Systems.</h2>
+        </div>
+        <a href="/services/modular-building-systems" class="btn btn-navy shrink-0" data-cursor>Explore Modular</a>
+      </div>
+    </div>
+  </section>
+
+  <CTA />
+</BaseLayout>

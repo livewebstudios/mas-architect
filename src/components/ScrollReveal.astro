@@ -1,0 +1,17 @@
+---
+/**
+ * Wraps slotted content so it fades + rises into view on scroll.
+ * The actual observation is handled by a single IntersectionObserver
+ * in BaseLayout (performant — no per-element hydration).
+ * Falls back to fully visible with no JS or under reduced-motion.
+ */
+interface Props {
+  delay?: number; // ms stagger
+  class?: string;
+}
+const { delay = 0, class: className = '' } = Astro.props;
+---
+
+<div class:list={['reveal', className]} style={`--reveal-delay:${delay}ms`}>
+  <slot />
+</div>

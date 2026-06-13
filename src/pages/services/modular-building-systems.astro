@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import ScrollReveal from '../../components/ScrollReveal.astro';
+import CTA from '../../components/CTA.astro';
+import { planbookSteps } from '../../data/portfolio';
+import { site as firm } from '../../data/site';
+---
+
+<BaseLayout
+  title="Modular Building Systems | MAS Architect"
+  description="A faster, smarter way to build — precision-engineered modular components constructed off-site and assembled on location for high-quality homes and commercial spaces."
+>
+  <PageHero
+    eyebrow="Modular Building"
+    title="Smarter Construction"
+    intro="Modular Building Systems offers a faster, smarter way to construct high-quality homes and commercial spaces — using precision-engineered components built off-site and efficiently assembled on location."
+  />
+
+  <section class="section">
+    <div class="container-mas grid gap-12 lg:grid-cols-2 lg:items-center">
+      <ScrollReveal>
+        <div class="relative aspect-video w-full overflow-hidden border border-line-soft">
+          <iframe
+            class="h-full w-full"
+            src={`https://www.youtube-nocookie.com/embed/${firm.youtubeId}`}
+            title="Designing Spaces: Modular Building Systems — Urgola / Stefanelli"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </ScrollReveal>
+      <ScrollReveal delay={100}>
+        <div class="flex flex-col items-start gap-5">
+          <h2 class="font-display text-3xl text-navy">Precision-built, on schedule.</h2>
+          <p class="leading-relaxed text-ink/70">
+            Modular construction brings the workshop to your project — components are engineered and assembled
+            in a controlled environment for speed, precision, and consistent quality, then efficiently
+            assembled on site. It’s how many of our homes come together faster, without compromising craft.
+          </p>
+          <img src="/images/mbs/mbs-logo.png" alt="Modular Building Systems" width="220" class="mt-1" />
+          <a href={firm.mbsUrl} target="_blank" rel="noopener noreferrer" class="btn btn-ghost" data-cursor>Visit mbs-nj.com</a>
+        </div>
+      </ScrollReveal>
+    </div>
+  </section>
+
+  <section class="section bg-linen bp-grid border-y border-line-soft">
+    <div class="container-mas flex flex-col gap-12">
+      <ScrollReveal>
+        <SectionHeading eyebrow="The Process" number="↳" title="From site to finished home." />
+      </ScrollReveal>
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {planbookSteps.map((step, i) => (
+          <ScrollReveal delay={(i % 3) * 90}>
+            <div class="h-full border border-line-soft bg-white p-7">
+              <p class="eyebrow mb-4"><span class="eyebrow__num">{String(i + 1).padStart(2, '0')}</span></p>
+              <h3 class="mb-2 font-display text-xl text-navy">{step.title}</h3>
+              <p class="text-sm leading-relaxed text-ink/70">{step.body}</p>
+            </div>
+          </ScrollReveal>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CTA />
+</BaseLayout>

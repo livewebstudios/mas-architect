@@ -1,0 +1,49 @@
+---
+// Formspree contact form. Jon supplies the real form ID (replace FORMSPREE_ID).
+const FORMSPREE_ID = 'FORMSPREE_ID';
+const nextUrl = new URL('/thank-you', Astro.site).href;
+const field = 'w-full border border-line bg-white px-4 py-3 text-ink outline-none transition-colors placeholder:text-indigo-muted/60 focus:border-navy';
+const label = 'font-mono text-[0.7rem] uppercase tracking-[0.16em] text-indigo-muted';
+---
+
+<form action={`https://formspree.io/f/${FORMSPREE_ID}`} method="POST" class="flex flex-col gap-6">
+  <input type="hidden" name="_next" value={nextUrl} />
+  {/* Honeypot — bots fill this; humans never see it */}
+  <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" class="hidden" />
+
+  <div class="grid gap-6 sm:grid-cols-2">
+    <div class="flex flex-col gap-2">
+      <label for="name" class={label}>Name *</label>
+      <input id="name" name="name" required autocomplete="name" class={field} />
+    </div>
+    <div class="flex flex-col gap-2">
+      <label for="phone" class={label}>Phone</label>
+      <input id="phone" name="phone" type="tel" autocomplete="tel" class={field} />
+    </div>
+  </div>
+
+  <div class="grid gap-6 sm:grid-cols-2">
+    <div class="flex flex-col gap-2">
+      <label for="email" class={label}>Email *</label>
+      <input id="email" name="email" type="email" required autocomplete="email" class={field} />
+    </div>
+    <div class="flex flex-col gap-2">
+      <label for="project-type" class={label}>Project Type</label>
+      <select id="project-type" name="project type" class={field}>
+        <option value="Residential">Residential</option>
+        <option value="Commercial">Commercial</option>
+        <option value="Renovation / Addition">Renovation / Addition</option>
+        <option value="Modular Building">Modular Building</option>
+        <option value="Interior Design">Interior Design</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label for="message" class={label}>Message *</label>
+    <textarea id="message" name="message" rows="6" required maxlength="600" class={field} placeholder="Tell us a little about your project…"></textarea>
+  </div>
+
+  <button type="submit" class="btn btn-navy self-start" data-cursor>Send Message</button>
+</form>

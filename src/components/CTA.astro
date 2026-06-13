@@ -1,0 +1,27 @@
+---
+import CropMarks from './blueprint/CropMarks.astro';
+interface Props {
+  title?: string;
+  text?: string;
+  label?: string;
+  href?: string;
+}
+const {
+  title = 'Let’s build something lasting.',
+  text = 'Tell us about your project — we’d love to start the conversation.',
+  label = 'Get in Touch',
+  href = '/contact',
+} = Astro.props;
+---
+
+<section class="section">
+  <div class="container-mas">
+    <div class="bp-grid relative border border-line-soft bg-linen px-6 py-16 text-center md:px-16 md:py-20">
+      <CropMarks />
+      <p class="eyebrow mb-5 justify-center">Start a Project</p>
+      <h2 class="mx-auto max-w-2xl font-display text-3xl text-navy text-balance md:text-5xl">{title}</h2>
+      <p class="mx-auto mt-5 max-w-xl text-ink/70">{text}</p>
+      <a href={href} class="btn btn-navy mt-8" data-cursor>{label}</a>
+    </div>
+  </div>
+</section>

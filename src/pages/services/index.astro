@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ScrollReveal from '../../components/ScrollReveal.astro';
+import CropMarks from '../../components/blueprint/CropMarks.astro';
+import CTA from '../../components/CTA.astro';
+import { services } from '../../data/services';
+
+const links = [
+  { label: 'Our Process', href: '/services/process' },
+  { label: 'Construction Documents', href: '/services/construction-documents' },
+  { label: 'Planbooks', href: '/services/planbooks' },
+  { label: 'Modular Building', href: '/services/modular-building-systems' },
+];
+---
+
+<BaseLayout
+  title="Services | MAS Architect"
+  description="From residential and commercial architecture to renovations, interiors, planning, and sustainable design — MAS Architect guides every project from concept to completion."
+>
+  <PageHero
+    eyebrow="Services"
+    title="From Concept to Completion"
+    intro="At MAS Architect, every project is an opportunity to create something meaningful. Our services guide you from the first idea to the finished space — blending creativity, technical expertise, and attention to detail at every step."
+  />
+
+  <section class="section">
+    <div class="container-mas grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {services.map((s, i) => (
+        <ScrollReveal delay={(i % 3) * 90}>
+          <article class="group relative h-full border border-line-soft bg-white p-8 transition-colors duration-500 hover:bg-linen" data-cursor>
+            <CropMarks class="opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+            <p class="eyebrow mb-6"><span class="eyebrow__num">{s.n}</span></p>
+            <h2 class="mb-3 font-display text-2xl text-navy">{s.title}</h2>
+            <p class="text-sm leading-relaxed text-ink/70">{s.body}</p>
+          </article>
+        </ScrollReveal>
+      ))}
+    </div>
+  </section>
+
+  <section class="section bg-linen bp-grid border-y border-line-soft">
+    <div class="container-mas flex flex-col gap-10">
+      <ScrollReveal>
+        <p class="eyebrow"><span class="eyebrow__num">↳</span> Go Deeper</p>
+      </ScrollReveal>
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {links.map((l, i) => (
+          <ScrollReveal delay={i * 80}>
+            <a href={l.href} class="group flex items-center justify-between border border-line bg-white px-6 py-5 transition-colors hover:bg-navy" data-cursor>
+              <span class="font-mono text-[0.74rem] uppercase tracking-[0.12em] text-navy transition-colors group-hover:text-paper">{l.label}</span>
+              <span class="text-navy transition-colors group-hover:text-paper">→</span>
+            </a>
+          </ScrollReveal>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CTA />
+</BaseLayout>

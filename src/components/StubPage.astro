@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from './SectionHeading.astro';
+import DimensionLine from './blueprint/DimensionLine.astro';
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  intro: string;
+  phase?: string;
+  seoTitle?: string;
+  description?: string;
+}
+const { eyebrow, title, intro, phase = 'Phase 3', seoTitle, description } = Astro.props;
+---
+
+<BaseLayout title={seoTitle ?? `${eyebrow} | MAS Architect`} description={description ?? intro}>
+  <section class="bp-grid">
+    <div class="container-mas section flex min-h-[62vh] flex-col items-center justify-center gap-8 text-center">
+      <SectionHeading align="center" eyebrow={eyebrow} title={title} intro={intro} />
+      <div class="w-full max-w-xs"><DimensionLine label={phase} /></div>
+      <a href="/" class="btn btn-ghost" data-cursor>Back Home</a>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,236 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import ScrollReveal from '../components/ScrollReveal.astro';
+import DimensionLine from '../components/blueprint/DimensionLine.astro';
+import CropMarks from '../components/blueprint/CropMarks.astro';
+import StatsCounter from '../components/StatsCounter.tsx';
+import CTA from '../components/CTA.astro';
+import { services } from '../data/services';
+import { stats, testimonials } from '../data/site';
+import { projects } from '../data/portfolio';
+import { getCollection } from 'astro:content';
+
+const featured = projects.slice(0, 6);
+const latestPosts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 3);
+const fmtDate = (d: Date) =>
+  d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+const planbookTeaser = [
+  { cat: '3 Bedroom', img: '/images/home/thumb-3bed.jpg' },
+  { cat: '4 Bedroom', img: '/images/planbooks/4bed.jpg' },
+  { cat: '5 Bedroom', img: '/images/home/thumb-5bed.jpg' },
+];
+---
+
+<BaseLayout>
+  <!-- HERO -->
+  <section class="bp-grid relative overflow-hidden">
+    <div class="container-mas grid items-center gap-12 pb-20 pt-12 md:pt-20 lg:grid-cols-[1.1fr_0.9fr] lg:pb-28">
+      <div class="hero-reveal flex flex-col gap-7">
+        <p class="eyebrow"><span class="eyebrow__num">MAS</span> Architecture &amp; Design — East Rutherford, NJ</p>
+        <h1 class="font-display text-[clamp(2.6rem,6vw,4.75rem)] leading-[1.02] text-navy text-balance">
+          Rebuilding Neighborhoods,<br />One House at a Time
+        </h1>
+        <p class="max-w-xl text-lg leading-relaxed text-ink/75">
+          We design spaces that are functional and inspiring — listening closely, drafting precisely, and
+          building work that stands the test of time.
+        </p>
+        <div class="mt-2 flex flex-wrap items-center gap-4">
+          <a href="/projects" class="btn btn-navy" data-cursor>View Our Work</a>
+          <a href="/contact" class="btn btn-ghost" data-cursor>Start a Project</a>
+        </div>
+        <div class="mt-6 max-w-md"><DimensionLine label="35+ Years · 250+ Projects" /></div>
+      </div>
+
+      <ScrollReveal>
+        <div class="relative aspect-[4/5] w-full overflow-hidden border border-line-soft">
+          <img
+            src="/images/home/hero.jpg"
+            alt="An elegant modern home designed by MAS Architect at golden hour"
+            width="928"
+            height="1152"
+            fetchpriority="high"
+            data-parallax="0.05"
+            class="absolute left-0 top-[-6%] h-[112%] w-full object-cover"
+          />
+          <CropMarks />
+        </div>
+      </ScrollReveal>
+    </div>
+  </section>
+
+  <!-- PRACTICE STATEMENT -->
+  <section class="section bp-grid border-y border-line-soft bg-linen">
+    <div class="container-mas">
+      <ScrollReveal>
+        <p class="max-w-4xl font-display text-2xl leading-snug text-navy text-balance md:text-4xl">
+          Our practice is built on collaboration, creativity, and attention to detail — every project tailored
+          to reflect our client’s vision and the character of its surroundings.
+        </p>
+      </ScrollReveal>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="section">
+    <div class="container-mas flex flex-col gap-14">
+      <ScrollReveal>
+        <div class="flex flex-wrap items-end justify-between gap-6">
+          <SectionHeading eyebrow="What We Do" number="01" title="Architecture that blends function, beauty, and purpose." />
+          <a href="/services" class="btn btn-ghost shrink-0" data-cursor>All Services</a>
+        </div>
+      </ScrollReveal>
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {services.map((s, i) => (
+          <ScrollReveal delay={(i % 3) * 90}>
+            <article class="group relative h-full border border-line-soft bg-white p-8 transition-colors duration-500 hover:bg-linen" data-cursor>
+              <CropMarks class="opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+              <p class="eyebrow mb-6"><span class="eyebrow__num">{s.n}</span></p>
+              <h3 class="mb-3 font-display text-2xl text-navy">{s.title}</h3>
+              <p class="text-sm leading-relaxed text-ink/70">{s.body}</p>
+            </article>
+          </ScrollReveal>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED PROJECTS -->
+  <section class="section bp-grid border-y border-line-soft bg-linen">
+    <div class="container-mas flex flex-col gap-14">
+      <ScrollReveal>
+        <div class="flex flex-wrap items-end justify-between gap-6">
+          <SectionHeading eyebrow="Selected Work" number="02" title="A portfolio built on craft." />
+          <a href="/projects" class="btn btn-ghost shrink-0" data-cursor>View All</a>
+        </div>
+      </ScrollReveal>
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {featured.map((p, i) => (
+          <ScrollReveal delay={(i % 3) * 80}>
+            <a href="/projects" class="group relative block overflow-hidden border border-line-soft bg-white" data-cursor>
+              <div class="aspect-[4/3] overflow-hidden">
+                <img src={p.src} alt={p.alt} loading="lazy" decoding="async" class="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105" />
+              </div>
+              <span class="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col gap-1 bg-gradient-to-t from-navy/80 to-navy/0 p-5 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                <span class="font-display text-lg text-paper">{p.title}</span>
+                <span class="font-mono text-[0.64rem] uppercase tracking-[0.14em] text-paper/80">{p.meta}</span>
+              </span>
+            </a>
+          </ScrollReveal>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- PLANBOOKS -->
+  <section class="section">
+    <div class="container-mas flex flex-col gap-14">
+      <ScrollReveal>
+        <SectionHeading
+          eyebrow="Planbooks"
+          number="03"
+          title="Ready-made plans, custom feel."
+          intro="Browse pre-designed 3, 4, and 5-bedroom homes — or use them as the starting point for something all your own."
+        />
+      </ScrollReveal>
+      <div class="grid gap-6 md:grid-cols-3">
+        {planbookTeaser.map((p, i) => (
+          <ScrollReveal delay={i * 90}>
+            <a href="/services/planbooks" class="group relative block overflow-hidden border border-line-soft" data-cursor>
+              <div class="aspect-[4/3] overflow-hidden">
+                <img src={p.img} alt={`${p.cat} planbook`} loading="lazy" decoding="async" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+              </div>
+              <div class="flex items-center justify-between bg-white p-5">
+                <span class="font-display text-xl text-navy">{p.cat}</span>
+                <span class="text-navy transition-transform duration-300 group-hover:translate-x-1">→</span>
+              </div>
+            </a>
+          </ScrollReveal>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT + STATS -->
+  <section class="section bp-grid border-y border-line-soft bg-linen">
+    <div class="container-mas flex flex-col gap-16">
+      <div class="grid gap-12 lg:grid-cols-2 lg:items-center">
+        <ScrollReveal>
+          <div class="relative aspect-[5/4] w-full">
+            <CropMarks />
+            <img src="/images/about/about-1.jpg" alt="A MAS Architect project" class="h-full w-full border border-line-soft object-cover" loading="lazy" decoding="async" />
+          </div>
+        </ScrollReveal>
+        <ScrollReveal delay={100}>
+          <div class="flex flex-col items-start gap-6">
+            <SectionHeading eyebrow="Who We Are" number="04" title="An architecture firm built on listening." />
+            <p class="leading-relaxed text-ink/70">
+              With every project, we take the time to understand our clients’ needs, lifestyle, and vision —
+              combining creativity, technical expertise, and attention to detail to create spaces that are
+              timeless, sustainable, and built to last.
+            </p>
+            <a href="/about" class="btn btn-ghost" data-cursor>About the Firm</a>
+          </div>
+        </ScrollReveal>
+      </div>
+      <ScrollReveal>
+        <StatsCounter client:visible items={stats} />
+      </ScrollReveal>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="section">
+    <div class="container-mas flex flex-col gap-14">
+      <ScrollReveal>
+        <SectionHeading eyebrow="Testimonials" number="05" title="Trusted by the people we build with." />
+      </ScrollReveal>
+      <div class="grid gap-6 md:grid-cols-3">
+        {testimonials.map((t, i) => (
+          <ScrollReveal delay={i * 90}>
+            <figure class="flex h-full flex-col justify-between gap-6 border border-line-soft bg-white p-8">
+              <span class="font-display text-5xl leading-none text-navy/20">”</span>
+              <blockquote class="-mt-6 leading-relaxed text-ink/80">{t.quote}</blockquote>
+              <figcaption>
+                <p class="font-display text-lg text-navy">{t.name}</p>
+                <p class="font-mono text-[0.68rem] uppercase tracking-[0.14em] text-indigo-muted">{t.company}</p>
+              </figcaption>
+            </figure>
+          </ScrollReveal>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- LATEST INSIGHTS -->
+  <section class="section bp-grid border-t border-line-soft bg-linen">
+    <div class="container-mas flex flex-col gap-14">
+      <ScrollReveal>
+        <div class="flex flex-wrap items-end justify-between gap-6">
+          <SectionHeading eyebrow="Journal" number="06" title="Latest insights." />
+          <a href="/blog" class="btn btn-ghost shrink-0" data-cursor>All Posts</a>
+        </div>
+      </ScrollReveal>
+      <div class="grid gap-8 md:grid-cols-3">
+        {latestPosts.map((post, i) => (
+          <ScrollReveal delay={i * 90}>
+            <a href={`/blog/${post.id}`} class="group flex h-full flex-col border border-line-soft bg-white" data-cursor>
+              <div class="aspect-[16/10] overflow-hidden">
+                <img src={post.data.featuredImage} alt={post.data.title} loading="lazy" decoding="async" class="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105" />
+              </div>
+              <div class="flex flex-1 flex-col gap-3 p-6">
+                <p class="font-mono text-[0.66rem] uppercase tracking-[0.14em] text-indigo-muted">{fmtDate(post.data.date)}</p>
+                <h3 class="font-display text-xl text-navy">{post.data.title}</h3>
+                <p class="text-sm leading-relaxed text-ink/70">{post.data.excerpt}</p>
+              </div>
+            </a>
+          </ScrollReveal>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CTA />
+</BaseLayout>

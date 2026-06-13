@@ -1,0 +1,17 @@
+---
+/**
+ * Four corner registration marks. Place inside a position:relative parent
+ * to frame cards and imagery with a drafting/print-crop feel.
+ */
+interface Props {
+  class?: string;
+}
+const { class: className = '' } = Astro.props;
+---
+
+<span class:list={['crop-marks', className]} aria-hidden="true">
+  <i class="tl"></i>
+  <i class="tr"></i>
+  <i class="bl"></i>
+  <i class="br"></i>
+</span>

@@ -1,0 +1,184 @@
+---
+/**
+ * Sticky site header — logo (as <img> per LWS rule), ALL-CAPS nav with a
+ * Services dropdown, a contact CTA, and an accessible mobile drawer.
+ */
+const path = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === '/' ? path === '/' : path.startsWith(href);
+
+const services = [
+  { label: 'Process', href: '/services/process' },
+  { label: 'Construction Documents', href: '/services/construction-documents' },
+  { label: 'Planbooks', href: '/services/planbooks' },
+  { label: 'Modular Building', href: '/services/modular-building-systems' },
+];
+
+const nav = [
+  { label: 'Home', href: '/' },
+  { label: 'About', href: '/about' },
+  { label: 'Services', href: '/services', children: services },
+  { label: 'Projects', href: '/projects' },
+  { label: 'Blog', href: '/blog' },
+];
+---
+
+<header
+  data-site-header
+  class="sticky top-0 z-50 border-b border-line-soft bg-paper/80 backdrop-blur-md transition-all duration-300"
+>
+  <div class="container-mas flex h-[72px] items-center justify-between gap-6">
+    <a href="/" class="shrink-0" aria-label="MAS Architect — home">
+      <img src="/images/logo-trans.png" alt="MAS Architect" width="239" height="64" class="h-12 w-auto md:h-16" />
+    </a>
+
+    <!-- Desktop nav -->
+    <nav class="hidden items-center gap-8 lg:flex" aria-label="Primary">
+      {nav.map((item) =>
+        item.children ? (
+          <div class="group relative">
+            <a
+              href={item.href}
+              class="nav-link inline-flex items-center gap-1.5"
+              aria-haspopup="true"
+              aria-current={isActive(item.href) ? 'page' : undefined}
+            >
+              {item.label}
+              <svg width="9" height="6" viewBox="0 0 9 6" fill="none" class="mt-px transition-transform duration-300 group-hover:rotate-180">
+                <path d="M1 1l3.5 3.5L8 1" stroke="currentColor" stroke-width="1.2" />
+              </svg>
+            </a>
+            <div class="invisible absolute left-1/2 top-full z-50 w-64 -translate-x-1/2 pt-4 opacity-0 transition-all duration-300 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+              <ul class="border border-line-soft bg-paper p-2 shadow-[0_18px_40px_-24px_rgba(38,34,97,0.45)]">
+                {item.children.map((c) => (
+                  <li>
+                    <a
+                      href={c.href}
+                      class="block px-4 py-2.5 font-mono text-[0.72rem] uppercase tracking-[0.12em] text-navy transition-colors hover:bg-linen"
+                      aria-current={isActive(c.href) ? 'page' : undefined}
+                    >
+                      {c.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ) : (
+          <a href={item.href} class="nav-link" aria-current={isActive(item.href) ? 'page' : undefined}>
+            {item.label}
+          </a>
+        )
+      )}
+    </nav>
+
+    <div class="flex items-center gap-3">
+      <a href="/contact" class="btn btn-navy hidden sm:inline-flex">Get in Touch</a>
+
+      <!-- Mobile toggle -->
+      <button
+        type="button"
+        data-nav-toggle
+        class="flex h-11 w-11 items-center justify-center lg:hidden"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+      >
+        <span class="relative block h-3 w-6">
+          <span class="absolute left-0 top-0 h-px w-full bg-navy transition-all duration-300" data-bar="top"></span>
+          <span class="absolute bottom-0 left-0 h-px w-full bg-navy transition-all duration-300" data-bar="bottom"></span>
+        </span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile drawer -->
+<div
+  id="mobile-nav"
+  data-mobile-nav
+  class="fixed inset-0 z-40 translate-x-full bg-paper transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] lg:hidden"
+  aria-hidden="true"
+>
+  <div class="bp-grid flex h-full flex-col px-6 pb-10 pt-28">
+    <nav class="flex flex-col gap-1" aria-label="Mobile">
+      {nav.map((item) => (
+        <a href={item.href} class="border-b border-line-soft py-4 font-display text-2xl text-navy">
+          {item.label}
+        </a>
+      ))}
+      <p class="eyebrow mt-6 mb-2">Services</p>
+      {services.map((c) => (
+        <a href={c.href} class="py-2 font-mono text-[0.8rem] uppercase tracking-[0.12em] text-indigo-muted">
+          {c.label}
+        </a>
+      ))}
+    </nav>
+    <a href="/contact" class="btn btn-navy mt-auto w-full justify-center">Get in Touch</a>
+  </div>
+</div>
+
+<script>
+  // View-transition-safe header behavior. Per-page elements are re-bound on
+  // astro:page-load; window/document listeners are bound once.
+  function closeDrawer() {
+    const drawer = document.querySelector<HTMLElement>('[data-mobile-nav]');
+    const toggle = document.querySelector<HTMLElement>('[data-nav-toggle]');
+    const barTop = document.querySelector<HTMLElement>('[data-bar="top"]');
+    const barBottom = document.querySelector<HTMLElement>('[data-bar="bottom"]');
+    if (!drawer) return;
+    drawer.classList.add('translate-x-full');
+    drawer.setAttribute('aria-hidden', 'true');
+    drawer.dataset.open = 'false';
+    document.body.style.overflow = '';
+    toggle?.setAttribute('aria-expanded', 'false');
+    toggle?.setAttribute('aria-label', 'Open menu');
+    if (barTop) barTop.style.transform = '';
+    if (barBottom) barBottom.style.transform = '';
+  }
+
+  function initHeader() {
+    const toggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
+    const drawer = document.querySelector<HTMLElement>('[data-mobile-nav]');
+    const barTop = document.querySelector<HTMLElement>('[data-bar="top"]');
+    const barBottom = document.querySelector<HTMLElement>('[data-bar="bottom"]');
+    if (!toggle || !drawer) return;
+
+    const setOpen = (next: boolean) => {
+      drawer.classList.toggle('translate-x-full', !next);
+      drawer.setAttribute('aria-hidden', String(!next));
+      drawer.dataset.open = String(next);
+      toggle.setAttribute('aria-expanded', String(next));
+      toggle.setAttribute('aria-label', next ? 'Close menu' : 'Open menu');
+      document.body.style.overflow = next ? 'hidden' : '';
+      if (barTop) barTop.style.transform = next ? 'translateY(5px) rotate(45deg)' : '';
+      if (barBottom) barBottom.style.transform = next ? 'translateY(-6px) rotate(-45deg)' : '';
+    };
+
+    toggle.addEventListener('click', () => setOpen(drawer.dataset.open !== 'true'));
+    drawer.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+  }
+
+  function applyHeaderScroll() {
+    const header = document.querySelector('[data-site-header]');
+    if (!header) return;
+    const scrolled = window.scrollY > 8;
+    header.classList.toggle('shadow-[0_10px_30px_-20px_rgba(38,34,97,0.5)]', scrolled);
+    header.classList.toggle('bg-paper/95', scrolled);
+  }
+
+  const w = window as any;
+  if (!w.__masHeaderGlobal) {
+    w.__masHeaderGlobal = true;
+    window.addEventListener('scroll', applyHeaderScroll, { passive: true });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeDrawer();
+    });
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    closeDrawer();
+    initHeader();
+    applyHeaderScroll();
+  });
+</script>
