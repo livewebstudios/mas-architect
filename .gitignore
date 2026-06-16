@@ -27,3 +27,10 @@ $RECYCLE.BIN/
 
 # Claude Code
 .claude/
+
+# Internal docs & original source assets — not needed for the site to build/run.
+# Paths are root-anchored (leading /) so the in-use copies under public/images/ stay tracked.
+/26_06_13_MAS_architect_CC_prompt.md
+/PRE-BUILD-PLAN.md
+/logo-trans.png
+/logo-white.png
